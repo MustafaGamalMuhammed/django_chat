@@ -1,3 +1,3 @@
 from .index import index
-from .signin import signin
+from .signin import SigninView
 from .signup import signup
