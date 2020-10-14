@@ -33,7 +33,7 @@ class FriendRequest(models.Model):
             else:
                 room = Room.objects.create(name=f"room-{self.other.id}-{self.user.id}")
 
-            self.user.contacts.add(other=self.other, room=room)
-            self.other.contacts.add(other=self.user, room=room)
+            Contact.objects.create(user=self.user, other=self.other, room=room)
+            Contact.objects.create(user=self.other, other=self.user, room=room)
 
         return super(FriendRequest, self).save(*args, **kwargs)

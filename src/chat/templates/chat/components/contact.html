@@ -1,0 +1,14 @@
+{% load static %}
+
+<a href="#" class="filterMembers all online contact" data-toggle="list" id="{{ contact.room.name }}">
+    <img class="avatar-md" src="{% static 'chat/img/avatars/avatar-female-1.jpg' %}" data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+    <div class="status">
+        <i class="material-icons online">fiber_manual_record</i>
+    </div>
+    <div class="data">
+        <h5>{{ contact.other.username }}</h5>
+    </div>
+    <div class="person-add">
+        <i class="material-icons">person</i>
+    </div>
+</a>
