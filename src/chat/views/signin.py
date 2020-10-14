@@ -1,4 +1,5 @@
-from django.shortcuts import reverse
+from django.shortcuts import reverse, redirect
+import django.contrib.auth as auth
 import django.contrib.auth.views as views
 from django.contrib import messages
 
@@ -10,7 +11,6 @@ class SigninView(views.LoginView):
         return reverse("index")
 
 
-class LogoutView(views.LogoutView):
-    
-    def get_success_url(self):
-        return reverse("signin")
+def logout(request):
+    auth.logout(request)
+    return redirect("index")
