@@ -1,9 +1,17 @@
 {% load static %}
 
-<a href="#" class="filterMembers all online contact" data-toggle="list" data-roomName="{{ contact.room.name }}" data-roomId="{{ contact.room.id }}">
+<a href="#" class="filterMembers all online contact" 
+    data-toggle="list" 
+    data-roomname="{{ contact.room.name }}" 
+    data-roomid="{{ contact.room.id }}" 
+    data-otherusername="{{ contact.other.username }}" 
+    data-otherid="{{ contact.other.id }}">
+    
     <img class="avatar-md" src="{% static 'chat/img/avatars/avatar-female-1.jpg' %}" data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
     <div class="status">
-        <i class="material-icons online">fiber_manual_record</i>
+        {% if user.profile.online %}
+            <i class="material-icons online">fiber_manual_record</i>
+        {% endif %}
     </div>
     <div class="data">
         <h5>{{ contact.other.username }}</h5>

@@ -1,8 +1,8 @@
-const contacts = document.getElementsByClassName("contact");
-const user_id = document.querySelector("#user_id").innerText;
-const messages = document.querySelector("#messages")
 let chatSocket = null;
 let room_id = null;
+let user_id = document.querySelector("#user_id").innerText;
+let main = document.querySelector("#nav-tabContent");
+main.style.visibility = "hidden";
 
 
 function createMessage(data) {
@@ -39,7 +39,7 @@ function createMessage(data) {
 }
 
 function appendToMessages(message) {
-    messages.appendChild(createMessage(message));
+    document.querySelector("#messages").appendChild(createMessage(message));
     let content = document.querySelector("#content");
     content.scrollTop = content.scrollHeight;
 }
@@ -64,27 +64,50 @@ function createChatSocket(contact) {
     };
 }
 
-for(let contact of contacts) {
+function populateMessages(contact) {
+    axios.get(`http://127.0.0.1:8000/messages/${contact.dataset.roomid}/`)
+    .then(res => res.data)
+    .then(data => {
+        document.querySelector("#messages").innerHTML = '';
+        for(let message of data) {
+            appendToMessages(message);
+        }
+    })
+    .catch(err => {
+        console.log(err);
+    })
+}
+
+function sendMessageInput() {
+    const messageInputDom = document.querySelector('#message_input');
+    const content = messageInputDom.value;
+    const user_id = document.querySelector("#user_id").innerText;
+
+    if(content.length > 0) {
+        chatSocket.send(JSON.stringify({
+            'content': content,
+            'user': user_id,
+            'room': room_id,
+        }));
+    }
+    
+    messageInputDom.value = '';
+}
+
+function onContactClickChange(contact) {
+    main.style.visibility = "visible";
+    document.querySelector("#otherusername").innerText = contact.dataset.otherusername;
+    room_id = contact.dataset.roomid;
+    document.querySelector("#message_input").focus();
+}
+
+for(let contact of document.getElementsByClassName("contact")) {
     contact.addEventListener("click", (e) => {
-        messages.innerHTML = '';
-
-        axios.get(`http://127.0.0.1:8000/messages/${contact.dataset.roomid}/`)
-        .then(res => res.data)
-        .then(data => {
-            console.log(data)
-            for(let message of data) {
-                appendToMessages(message);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        })
-
-        room_id = contact.dataset.roomid;
-
-        createChatSocket(contact);
-
-        document.querySelector("#message_input").focus();
+        if(contact.dataset.roomid != room_id) {
+            populateMessages(contact);
+            createChatSocket(contact);
+            onContactClickChange(contact);
+        }
     })
 }
 
@@ -95,12 +118,5 @@ document.querySelector("#message_input").onkeyup = function(e) {
 }
 
 document.querySelector("#message_submit").onclick = function(e) {
-    const messageInputDom = document.querySelector('#message_input');
-    const content = messageInputDom.value;
-    chatSocket.send(JSON.stringify({
-        'content': content,
-        'user': user_id,
-        'room': room_id,
-    }));
-    messageInputDom.value = '';
+    sendMessageInput();
 }
