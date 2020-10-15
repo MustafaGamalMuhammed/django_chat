@@ -1,21 +1,21 @@
 {% load static %}
 
 <div class="main">
-    <div class="tab-content" id="nav-tabContent">
+    <div :style="messagesStyle" class="tab-content" id="nav-tabContent">
         <!-- Start of Babble -->
         <div class="babble tab-pane fade active show" id="list-chat" role="tabpanel" aria-labelledby="list-chat-list">
             <!-- Start of Chat -->
             <div class="chat" id="chat1">
-                <div class="top">
+                <div v-if="currentContact" class="top">
                     <div class="container">
                         <div class="col-md-12">
                             <div class="inside">
                                 <a href="#"><img class="avatar-md" src="{% static 'chat/img/avatars/avatar-female-5.jpg' %}" data-toggle="tooltip" data-placement="top" title="Keith" alt="avatar"></a>
-                                <div class="status">
+                                <div v-if="currentContact.otheronline" class="status">
                                     <i class="material-icons online">fiber_manual_record</i>
                                 </div>
                                 <div class="data">
-                                    <h5><a href="#" id="otherusername"></a></h5>
+                                    <h5><a href="#" id="otherusername" v-html="currentContact.otherusername"></a></h5>
                                     <span>Active now</span>
                                 </div>
                                 <div class="dropdown">
@@ -33,7 +33,26 @@
                 <div class="content" id="content">
                     <div class="container">
                         <div class="col-md-12" id="messages">
-                            
+                            <div 
+                                v-for="message in messages"
+                                class="message"
+                                :class="{ me: message.user==user_id }"
+                                >
+                                <!-- <img class="avatar-md" src="dist/img/avatars/avatar-female-5.jpg" data-toggle="tooltip" data-placement="top" title="Keith" alt="avatar"> -->
+                                <div class="text-main">
+                                    <div 
+                                        class="text-group"
+                                        :class="{ me: message.user==user_id }">
+                                        
+                                        <div 
+                                            class="text"
+                                            :class="{ me: message.user==user_id }">
+                                            <p v-html="message.content"></p>
+                                        </div>
+                                    </div>
+                                    <!-- <span>09:46 AM</span> -->
+                                </div>
+                            </div>                            
                         </div>
                     </div>
                 </div>
@@ -41,8 +60,17 @@
                     <div class="col-md-12">
                         <div class="bottom">
                             <div class="position-relative w-100">
-                                <textarea class="form-control" placeholder="Start typing for reply..." rows="1" id="message_input"></textarea>
-                                <button type="submit" class="btn send" id="message_submit"><i class="material-icons">send</i></button>
+                                <textarea
+                                    @keyup="clickSubmitButton" 
+                                    class="form-control" 
+                                    placeholder="Start typing for reply..." 
+                                    rows="1" 
+                                    id="message_input"></textarea>
+                                <button 
+                                    @click="sendMessage"
+                                    type="submit" 
+                                    class="btn send" 
+                                    id="message_submit"><i class="material-icons">send</i></button>
                             </div>
                         </div>
                     </div>

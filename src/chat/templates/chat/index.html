@@ -3,15 +3,110 @@
 
 
 {% block content %}
-	<div>
-		<main>
-			<div class="layout">
-				{% include './components/navigation.html' %}
-				{% include './components/sidebar.html' %}
-				{% include './components/add_friends.html' %}
-				{% include './components/create_chat.html' %}
-				{% include './components/main.html' %}
-			</div>
-		</main>
-	</div>
+<div id="main">
+	<main>
+		<div class="layout">
+			{% include './components/navigation.html' %}
+			{% include './components/sidebar.html' %}
+			{% include './components/add_friends.html' %}
+			{% include './components/create_chat.html' %}
+			{% include './components/main.html' %}
+		</div>
+	</main>
+</div>
+
+<script>
+    var members = new Vue({
+        el: '#main',
+        data: function() {
+            return {
+                contacts: [],
+                currentContact: null,
+                messages: [],
+                user_id: "{{ user.id }}",
+                chatSocket: null,
+                messagesStyle: null,
+            };
+        },
+        methods: {
+            getContacts: function(filter) {
+                axios.get(`http://127.0.0.1:8000/contacts/?filter=${filter}`)
+                .then(res => JSON.parse(res.data))
+                .then(data => {
+                    console.log(data);
+                    this.contacts = data;
+                })
+                .catch(err => console.log(err))
+            },
+            loadRoom: function(contact) {
+                this.currentContact = contact;
+            },
+            populateMessages: function(contact) {
+                axios.get(`http://127.0.0.1:8000/messages/${contact.roomid}/`)
+                .then(res => res.data)
+                .then(data => {
+                    this.messages = data;
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            },
+            createChatSocket: function(contact) {
+                this.chatSocket = new WebSocket(
+                    'ws://'
+                    + window.location.host
+                    + '/ws/chat/'
+                    + contact.roomname
+                    + '/'
+                );
+
+                this.chatSocket.onmessage = this.onMessage;
+
+                this.chatSocket.onclose = this.onClose;
+            },
+            onMessage: function(e) {
+                const message = JSON.parse(e.data);
+                this.messages.push(message);
+            },
+            onClose: function(e) {
+                console.error('Chat socket closed unexpectedly');
+            },
+            onContactClickChanges: function(contact) {
+                this.messagesStyle = {
+                    visibility: 'visible',
+                };
+                document.querySelector("#message_input").focus();
+            },
+            sendMessage: function() {
+                const messageInputDom = document.querySelector('#message_input');
+                const content = messageInputDom.value;
+
+                if(content.length > 0) {
+                    this.chatSocket.send(JSON.stringify({
+                        'content': content,
+                        'user': this.currentContact.userid,
+                        'room': this.currentContact.roomid,
+                    }));
+                }
+                
+                messageInputDom.value = '';
+            },
+            clickSubmitButton: function(e) {
+                if(e.keyCode == 13) {
+                    document.querySelector("#message_submit").click();
+                }
+            },
+        },
+        watch: {
+            currentContact: function(contact) {
+                this.populateMessages(contact);
+                this.createChatSocket(contact);
+                this.onContactClickChanges();
+            },
+        },
+        mounted: function() {
+            this.getContacts('all');
+        },
+    });
+</script>
 {% endblock content %}

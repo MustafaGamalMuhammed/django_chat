@@ -14,6 +14,10 @@
 	<link href="{% static 'chat/css/swipe.min.css' %}" type="text/css" rel="stylesheet">
 	<!-- Favicon -->
 	<link href="{% static 'chat/img/favicon.png' %}" type="image/png" rel="icon">
+	<link rel="stylesheet" href="{% static 'chat/css/index.css' %}">
+
+	<script src="{% static 'chat/js/vue.js' %}"></script>
+	<script src="{% static 'chat/js/axios.min.js' %}"></script>
 </head>
 
 <body>
@@ -33,7 +37,6 @@
 		function scrollToBottom(el) { el.scrollTop = el.scrollHeight; }
 		scrollToBottom(document.getElementById('content'));
 	</script>
-	<script src="{% static 'chat/js/axios.min.js' %}"></script>
 	<script src="{% static 'chat/js/chat.js' %}"></script>
 </body>
 

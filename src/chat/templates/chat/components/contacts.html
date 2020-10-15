@@ -10,17 +10,36 @@
         <button class="btn create" data-toggle="modal" data-target="#exampleModalCenter"><i class="material-icons">person_add</i></button>
     </div>
     <div class="list-group sort">
-        <button class="btn filterMembersBtn active show" data-toggle="list" data-filter="all">All</button>
-        <button class="btn filterMembersBtn" data-toggle="list" data-filter="online">Online</button>
-        <button class="btn filterMembersBtn" data-toggle="list" data-filter="offline">Offline</button>
+        <button class="btn" @click="getContacts('all')">All</button>
+        <button class="btn" @click="getContacts('online')">Online</button>
+        <button class="btn" @click="getContacts('offline')">Offline</button>
     </div>						
     <div class="contacts">
         <h1>Contacts</h1>
-        <div class="list-group" id="contacts" role="tablist">
-            {% for contact in user.contacts.all %}
-                {% include './contact.html' with contact=contact %}
-            {% endfor %}
+        <div id="contacts">
+            <a
+            v-for="contact in contacts" 
+            @click="loadRoom(contact)"
+            href="#" class="filterMembers all online contact" 
+            data-toggle="list" 
+            data-roomname="contact.roomname" 
+            data-roomid="contact.roomid" 
+            data-otherusername="contact.otherusername" 
+            data-otherid="contact.otherid">
+            
+                <img class="avatar-md" src="{% static 'chat/img/avatars/avatar-female-1.jpg' %}" data-toggle="tooltip" data-placement="top" title="Janette" alt="avatar">
+                <div class="status" v-if="contact.otheronline">
+                    <i class="material-icons online">fiber_manual_record</i>
+                </div>
+                <div class="data">
+                    <h5 v-html="contact.otherusername"></h5>
+                </div>
+                <div class="person-add">
+                    <i class="material-icons">person</i>
+                </div>
+            </a>
         </div>
     </div>
 </div>
 <!-- End of Contacts -->
+
