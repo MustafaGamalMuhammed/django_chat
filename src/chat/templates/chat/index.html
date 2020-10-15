@@ -26,6 +26,7 @@
                 user_id: "{{ user.id }}",
                 chatSocket: null,
                 messagesStyle: null,
+                search: "",
             };
         },
         methods: {
@@ -67,6 +68,10 @@
             onMessage: function(e) {
                 const message = JSON.parse(e.data);
                 this.messages.push(message);
+                setTimeout(() => {
+                    let content = document.querySelector("#content");
+                    content.scrollTop = content.scrollHeight;
+                }, 200)
             },
             onClose: function(e) {
                 console.error('Chat socket closed unexpectedly');
@@ -76,6 +81,10 @@
                     visibility: 'visible',
                 };
                 document.querySelector("#message_input").focus();
+                setTimeout(() => {
+                    let content = document.querySelector("#content");
+                    content.scrollTop = content.scrollHeight;
+                }, 500)
             },
             sendMessage: function() {
                 const messageInputDom = document.querySelector('#message_input');
@@ -103,6 +112,14 @@
                 this.createChatSocket(contact);
                 this.onContactClickChanges();
             },
+            search: function(search_query) {
+                axios.get(`http://127.0.0.1:8000/search/${search_query}/`)
+                    .then(res => JSON.parse(res.data))
+                    .then(data => {
+                        this.contacts = data;
+                    })
+                    .catch(err => console.log(err))
+            }
         },
         mounted: function() {
             this.getContacts('all');

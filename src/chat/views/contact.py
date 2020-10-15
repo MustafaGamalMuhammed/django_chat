@@ -43,3 +43,18 @@ def contacts(request):
     data = JSONRenderer().render(data)
 
     return Response(data=data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def search(request, search_query):
+    contacts = request.user.contacts.filter(other__username__icontains=search_query)
+    
+    data = []
+    
+    for contact in contacts:
+        data.append(get_contact_data(contact))
+    
+    data = JSONRenderer().render(data)
+
+    return Response(data=data, status=status.HTTP_200_OK)
+

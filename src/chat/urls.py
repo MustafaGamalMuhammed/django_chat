@@ -9,4 +9,5 @@ urlpatterns = [
     path('friend_request/', views.friend_request, name="friend_request"),
     path('messages/<int:room_id>/', views.messages),
     path('contacts/', views.contacts),
+    path('search/<str:search_query>/', views.search),
 ]
