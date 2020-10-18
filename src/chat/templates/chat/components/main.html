@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="data">
                                     <h5><a href="#" id="otherusername" v-html="currentContact.otherusername"></a></h5>
-                                    <span>Active now</span>
+                                    <span v-if="currentContact.otheronline">Active now</span>
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons md-30">more_vert</i></button>
@@ -36,17 +36,17 @@
                             <div 
                                 v-for="message in messages"
                                 class="message"
-                                :class="{ me: message.user==user_id }"
+                                :class="{ me: message.user==currentContact.userid }"
                                 >
                                 <!-- <img class="avatar-md" src="dist/img/avatars/avatar-female-5.jpg" data-toggle="tooltip" data-placement="top" title="Keith" alt="avatar"> -->
                                 <div class="text-main">
                                     <div 
                                         class="text-group"
-                                        :class="{ me: message.user==user_id }">
+                                        :class="{ me: message.user==currentContact.userid }">
                                         
                                         <div 
                                             class="text"
-                                            :class="{ me: message.user==user_id }">
+                                            :class="{ me: message.user==currentContact.userid }">
                                             <p v-html="message.content"></p>
                                         </div>
                                     </div>
@@ -146,5 +146,3 @@
         <!-- End of Babble -->
     </div>
 </div>
-
-{{ user.id|json_script:"user_id" }}

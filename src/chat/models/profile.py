@@ -12,7 +12,7 @@ class Profile(models.Model):
         return cache.get('seen_%s' % self.user.username)
 
     def online(self):
-        if self.last_seen:
+        if self.last_seen():
             now = datetime.datetime.now()
             if now > self.last_seen() + datetime.timedelta(
                         seconds=settings.USER_ONLINE_TIMEOUT):

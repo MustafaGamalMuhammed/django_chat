@@ -18,11 +18,13 @@
 <script>
     var members = new Vue({
         el: '#main',
+        delimiters: ["[[", "]]"],
         data: function() {
             return {
                 contacts: [],
-                currentContact: null,
                 messages: [],
+                notifications: [],
+                currentContact: null,
                 user_id: "{{ user.id }}",
                 chatSocket: null,
                 messagesStyle: null,
@@ -34,8 +36,16 @@
                 axios.get(`http://127.0.0.1:8000/contacts/?filter=${filter}`)
                 .then(res => JSON.parse(res.data))
                 .then(data => {
-                    console.log(data);
                     this.contacts = data;
+                })
+                .catch(err => console.log(err))
+            },
+            getNotifications: function(filter) {
+                axios.get(`http://127.0.0.1:8000/notifications/?filter=${filter}`)
+                .then(res => JSON.parse(res.data))
+                .then(data => {
+                    console.log(data);
+                    this.notifications = data;
                 })
                 .catch(err => console.log(err))
             },
@@ -105,6 +115,25 @@
                     document.querySelector("#message_submit").click();
                 }
             },
+            acceptFriendRequest: function(id) {
+                axios.post(`http://127.0.0.1:8000/accept_friend_request/${id}/`)
+                .then(res => this.deleteNotification(id))
+                .catch(err => console.log(err))
+            },
+            rejectFriendRequest: function(id) {
+                console.log(id);
+                axios.post(`http://127.0.0.1:8000/reject_friend_request/${id}/`)
+                .then(res => this.deleteNotification())
+                .catch(err => console.log(err))
+            },
+            deleteNotification: function(id) {
+                for(let i = 0; i < this.notifications.length; i++) {
+                    if(this.notifications[i].friendrequestid == id) {
+                        this.notifications.splice(i, 1);
+                    }
+                }
+                this.getContacts('all');
+            }
         },
         watch: {
             currentContact: function(contact) {
@@ -122,7 +151,10 @@
             }
         },
         mounted: function() {
+            axios.defaults.headers["X-CSRFToken"] = Cookies.get('csrftoken');
+            
             this.getContacts('all');
+            this.getNotifications('all');
         },
     });
 </script>

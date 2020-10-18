@@ -25,21 +25,11 @@ def contacts(request):
     if filter == 'all':
         contacts = request.user.contacts.all()
     if filter == 'online':
-        contacts = []
-        for contact in request.user.contacts.all():
-            if contact.other.profile.online():
-                contacts.append(contact)
+        contacts = [c for c in request.user.contacts.all() if c.other.profile.online()]
     if filter == 'offline':
-        contacts = []
-        for contact in request.user.contacts.all():
-            if not contact.other.profile.online():
-                contacts.append(contact)
+        contacts = [c for c in request.user.contacts.all() if not c.other.profile.online()]
 
-    data = []
-    
-    for contact in contacts:
-        data.append(get_contact_data(contact))
-    
+    data = [get_contact_data(c) for c in contacts]
     data = JSONRenderer().render(data)
 
     return Response(data=data, status=status.HTTP_200_OK)
@@ -48,12 +38,7 @@ def contacts(request):
 @api_view(['GET'])
 def search(request, search_query):
     contacts = request.user.contacts.filter(other__username__icontains=search_query)
-    
-    data = []
-    
-    for contact in contacts:
-        data.append(get_contact_data(contact))
-    
+    data = [get_contact_data(c) for c in contacts]    
     data = JSONRenderer().render(data)
 
     return Response(data=data, status=status.HTTP_200_OK)

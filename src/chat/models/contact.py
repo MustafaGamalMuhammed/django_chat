@@ -19,6 +19,7 @@ class FriendRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     other = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friend_requests")
     accepted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         if self.user.id < self.other.id:
@@ -29,11 +30,13 @@ class FriendRequest(models.Model):
     def save(self, *args, **kwargs):
         if self.accepted == True:
             if self.user.id < self.other.id:
-                room = Room.objects.create(name=f"room-{self.user.id}-{self.other.id}")
+                name=f"room-{self.user.id}-{self.other.id}"
+                room, _ = Room.objects.get_or_create(name=name)
             else:
-                room = Room.objects.create(name=f"room-{self.other.id}-{self.user.id}")
+                name=f"room-{self.other.id}-{self.user.id}"
+                room, _ = Room.objects.get_or_create(name=name)
 
-            Contact.objects.create(user=self.user, other=self.other, room=room)
-            Contact.objects.create(user=self.other, other=self.user, room=room)
+            Contact.objects.get_or_create(user=self.user, other=self.other, room=room)
+            Contact.objects.get_or_create(user=self.other, other=self.user, room=room)
 
         return super(FriendRequest, self).save(*args, **kwargs)
