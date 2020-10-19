@@ -151,3 +151,9 @@ STATIC_URL = '/static/'
 # LOGIN 
 
 LOGIN_URL = 'signin'
+
+# MEDIA URL
+
+MEDIA_ROOT = BASE_DIR/'media'
+
+MEDIA_URL = 'media/'

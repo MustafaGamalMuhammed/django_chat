@@ -1,12 +1,10 @@
 from django.shortcuts import get_object_or_404
-from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from chat.models import FriendRequest
-from django.core.serializers import serialize
 
 
 def get_friend_request_data(friend_request):
@@ -17,6 +15,7 @@ def get_friend_request_data(friend_request):
     return data
 
 
+@login_required
 @api_view(['GET'])
 def notifications(request):
     filter = request.GET['filter']

@@ -14,7 +14,8 @@ def get_contact_data(contact):
     data['otherusername'] = contact.other.username
     data['otherid']       = contact.other.id
     data['otheronline']   = contact.other.profile.online()
-    
+    data['otherimage']    = contact.other.profile.image.url
+
     return data
 
 

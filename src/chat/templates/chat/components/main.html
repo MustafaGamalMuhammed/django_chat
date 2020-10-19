@@ -10,7 +10,7 @@
                     <div class="container">
                         <div class="col-md-12">
                             <div class="inside">
-                                <a href="#"><img class="avatar-md" src="{% static 'chat/img/avatars/avatar-female-5.jpg' %}" data-toggle="tooltip" data-placement="top" title="Keith" alt="avatar"></a>
+                                <a href="#"><img class="avatar-md" :src="currentContact.otherimage" data-toggle="tooltip" data-placement="top" title="Keith" alt="avatar"></a>
                                 <div v-if="currentContact.otheronline" class="status">
                                     <i class="material-icons online">fiber_manual_record</i>
                                 </div>

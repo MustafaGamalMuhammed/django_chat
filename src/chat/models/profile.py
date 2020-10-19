@@ -6,7 +6,8 @@ from src import settings
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user  = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="profile_pics", default="default.jpg", blank=True, null=True)
 
     def last_seen(self):
         return cache.get('seen_%s' % self.user.username)

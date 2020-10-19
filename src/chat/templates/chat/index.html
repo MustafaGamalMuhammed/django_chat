@@ -29,6 +29,7 @@
                 chatSocket: null,
                 messagesStyle: null,
                 search: "",
+                profile: null,
             };
         },
         methods: {
@@ -133,6 +134,14 @@
                     }
                 }
                 this.getContacts('all');
+            },
+            getProfile: function() {
+                axios.get('http://127.0.0.1:8000/profile/')
+                .then(res => JSON.parse(res.data))
+                .then(data => {
+                    this.profile = data;
+                })
+                .catch(err => console.log(err))
             }
         },
         watch: {
@@ -155,6 +164,7 @@
             
             this.getContacts('all');
             this.getNotifications('all');
+            this.getProfile();
         },
     });
 </script>
