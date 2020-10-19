@@ -58,12 +58,13 @@
                             <button type="submit" class="btn button w-100">Apply</button>
                         </div>
                     </form>
-                    <form action="{% url delete_profile %}" method="post">
-                        {% csrf_token %}
-                        <button class="btn btn-link w-100">Delete Account</button>
-                    </form>
                 </div>
             </div>
+
+            <form action="{% url 'delete_profile' %}" method="post" style="margin: 10px auto">
+                {% csrf_token %}
+                <button class="btn btn-danger w-100" style="background-color: crimson; color: white;">Delete Account</button>
+            </form>
             <!-- End of My Account -->
             <!-- Start of Chat History -->
             <div class="category">
