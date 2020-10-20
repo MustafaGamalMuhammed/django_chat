@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.parsers import JSONParser
 from chat.models import FriendRequest, Contact, Room, Profile
 import json
+import channels
 
 
 class FriendRequestModelTest(TestCase):
@@ -184,3 +185,46 @@ class SearchViewTest(TestCase):
         data = json.loads(response.json())
 
         self.assertEqual(len(data), 1)
+
+
+class NotificationsViewTest(TestCase):
+    def create_three_test_users(self):
+        test_user_1 = User.objects.create(username="test_user_1", password="test_user_1_password")
+        test_user_2 = User.objects.create(username="test_user_2", password="test_user_2_password")
+        test_user_3 = User.objects.create(username="test_user_3", password="test_user_3_password")
+        return test_user_1, test_user_2, test_user_3
+
+    def test_all_filter(self):
+        test_user_1, test_user_2, test_user_3 = self.create_three_test_users()
+
+        FriendRequest.objects.create(user=test_user_2, other=test_user_1, accepted=False)
+        FriendRequest.objects.create(user=test_user_3, other=test_user_1, accepted=True)
+        
+        self.client.force_login(test_user_1)
+
+        response = self.client.get(reverse('notifications')+"?filter=all")
+        data = json.loads(response.json())
+
+        self.assertEqual(len(data), 1)
+
+    def test_accept_friend_request(self):
+        test_user_1, test_user_2, test_user_3 = self.create_three_test_users()
+
+        friend_request = FriendRequest.objects.create(user=test_user_2, other=test_user_1, accepted=False)
+        
+        self.client.force_login(test_user_1)
+
+        response = self.client.post(reverse('accept_friend_request', args=(friend_request.id,)))
+
+        self.assertEqual(FriendRequest.objects.get(id=friend_request.id).accepted, True)
+
+    def test_reject_friend_request(self):
+        test_user_1, test_user_2, test_user_3 = self.create_three_test_users()
+
+        friend_request = FriendRequest.objects.create(user=test_user_2, other=test_user_1, accepted=False)
+        
+        self.client.force_login(test_user_1)
+
+        response = self.client.post(reverse('reject_friend_request', args=(friend_request.id,)))
+
+        self.assertEqual(FriendRequest.objects.filter(user=test_user_2, other=test_user_1).count(), 0)
