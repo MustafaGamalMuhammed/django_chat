@@ -30,12 +30,16 @@ class Profile(models.Model):
         return f"{self.user.username}'s profile"
 
     def update_image(self, image):
+        _x = list(range(0, 10)) + 'A a B b C c D d E e F f G g H h I i J j K k L l M m N n O o P p Q q R r S s T t U u V v W w X x Y y Z z'.split(' ')
+        _x = [str(item) for item in _x]
+        random.shuffle(_x)
+
         im = Image.open(image)
-        im_name = f"{random.randint(10**6, 10**6 * 9)}.{im.tile[0][0]}"
+        im_name = f"{''.join(_x)[:20]}.{im.tile[0][0]}"
         width, height = im.size
         
         if width > 200 or height > 200:
-            im = im.resize((200, 200))
+            im.thumbnail((200, 200), Image.ANTIALIAS)
             
         im.save(settings.BASE_DIR/f'media/profile_pics/{im_name}')
         self.image = f"profile_pics/{im_name}"
