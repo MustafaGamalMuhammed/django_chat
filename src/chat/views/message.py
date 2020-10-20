@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,6 +7,7 @@ from chat.models import Room
 from chat.serializers import MessageSerializer
 
 
+@login_required
 @api_view(['GET'])
 def messages(request, room_id):
     room = get_object_or_404(Room, id=room_id)

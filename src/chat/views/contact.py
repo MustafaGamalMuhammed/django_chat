@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -19,6 +20,7 @@ def get_contact_data(contact):
     return data
 
 
+@login_required
 @api_view(['GET'])
 def contacts(request):
     filter = request.GET.get('filter')
@@ -36,6 +38,7 @@ def contacts(request):
     return Response(data=data, status=status.HTTP_200_OK)
 
 
+@login_required
 @api_view(['GET'])
 def search(request, search_query):
     contacts = request.user.contacts.filter(other__username__icontains=search_query)
