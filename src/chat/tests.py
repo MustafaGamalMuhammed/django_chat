@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.parsers import JSONParser
 from chat.models import FriendRequest, Contact, Room, Profile
 import json
-import channels
 
 
 class FriendRequestModelTest(TestCase):
@@ -69,6 +68,11 @@ class ProfileModelTest(TestCase):
         self.client.get(reverse('index'))
 
         self.assertEqual(test_user.profile.online(), True)
+
+    def test_user_is_offline_if_user_didnot_make_a_request_recently(self):
+        test_user = self.create_user()
+
+        self.assertEqual(test_user.profile.online(), False)
 
 
 class FriendRequestViewTest(TestCase):
