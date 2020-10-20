@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.forms import PasswordChangeForm
 import json
+from PIL import Image
 
 
 @login_required
@@ -31,9 +32,9 @@ def update_profile(request):
     new_password1 = request.POST.get('new_password1')
     new_password2 = request.POST.get('new_password2')
 
+
     if image:
-        request.user.profile.image = image
-        request.user.profile.save()
+        request.user.profile.update_image(image)
 
     if username:
         request.user.username = username

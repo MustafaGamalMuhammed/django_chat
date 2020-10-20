@@ -20,13 +20,13 @@
                     <i class="material-icons">keyboard_arrow_right</i>
                 </a>
                 <div class="collapse" id="collapseOne" aria-labelledby="headingOne" data-parent="#accordionSettings">
-                    <form class="content" method="POST" action="{% url 'update_profile' %}">
+                    <form class="content" method="POST" action="{% url 'update_profile' %}" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <div class="upload">
                             <div class="data">
                                 <img class="avatar-xl" :src="profile.image" alt="image">
                                 <label>
-                                    <input type="file" name="image">
+                                    <input type="file" name="image" accept="image/*">
                                     <span class="btn button">Upload avatar</span>
                                 </label>
                             </div>
