@@ -64,15 +64,19 @@ class ProfileModelTest(TestCase):
 
     def test_user_is_online_if_user_made_a_request_recently(self):
         test_user = self.create_user()
+
         self.client.force_login(test_user)
         self.client.get(reverse('index'))
 
         self.assertEqual(test_user.profile.online(), True)
 
-    def test_user_is_offline_if_user_didnot_make_a_request_recently(self):
+    def test_upload_image_method(self):
         test_user = self.create_user()
+        
+        im_size = test_user.profile.update_image('/home/mustafa/code/django_chat/src/media/test.jpg')
 
-        self.assertEqual(test_user.profile.online(), False)
+        self.assertLessEqual(im_size[0], 200)
+        self.assertLessEqual(im_size[1], 200)
 
 
 class FriendRequestViewTest(TestCase):

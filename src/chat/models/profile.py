@@ -45,3 +45,5 @@ class Profile(models.Model):
         self.image = f"profile_pics/{im_name}"
 
         self.save()
+
+        return im.size
