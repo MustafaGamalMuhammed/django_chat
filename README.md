@@ -2,7 +2,7 @@
 A simple one to one text chat app where you can send a friend request using the person username.
 
 ## installation
-After clonning the repo, excute the following commands in the exact following order
+After clonning the repo, execute the following commands in the exact following order
 
 ```bash
 source venv/bin/activate
