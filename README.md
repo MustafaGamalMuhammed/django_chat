@@ -1,5 +1,5 @@
-# django_chat
-A simple one to one text chat app where you can send a friend request using the person username.
+# django_chat (under active development)
+A simple one-to-one chat app where you can send a friend request using the person username.
 
 ## installation
 After clonning the repo, execute the following commands in the exact following order
@@ -40,7 +40,7 @@ python manage.py runserver
 ```
 
 ## Technologies used in the project
-This project uses the following technologies:
+This application uses the following technologies:
 
 - django
 - djangorestframework
