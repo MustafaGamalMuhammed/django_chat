@@ -20,13 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8a$0c+h7x!lohucsr5v&zxreb$j%ueali00q)uabb$mq0&y*ft'
-
+with open(BASE_DIR/'secret_key.txt', 'r') as f:
+    SECRET_KEY = f.read()
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = [
+        'django-chat2.herokuapp.com'
+    ]
 
 # Application definition
 
@@ -145,6 +149,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+
+STATIC_ROOT = BASE_DIR/'static'
 
 STATIC_URL = '/static/'
 
