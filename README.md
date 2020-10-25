@@ -44,6 +44,7 @@ This project uses the following technologies:
 
 - django
 - djangorestframework
+- channels
 - redis
 - memcached
 - vue js
