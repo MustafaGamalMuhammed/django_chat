@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 with open(BASE_DIR/'secret_key.txt', 'r') as f:
     SECRET_KEY = f.read()
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = []
@@ -102,8 +102,11 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',              
+        'BACKEND': 'dango_redis.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+         }
     }
 }
 
